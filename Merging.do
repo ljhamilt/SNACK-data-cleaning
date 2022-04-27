@@ -54,12 +54,22 @@ egen age = rowtotal(agesnad age_snackw1)
 order age, before(source_study)
 
 
+recode GDS_1 GDS_2 GDS_3 GDS_4 GDS_7 GDS_8 GDS_9 GDS_10 GDS_12 GDS_14 GDS_15 GDS_17 GDS_21 GDS_22 GDS_23 (2=0) // these are the GDS-15 items
+
+egen gds15_snack = rowtotal(GDS_1 GDS_2 GDS_3 GDS_4 GDS_7 GDS_8 GDS_9 GDS_10 GDS_12 GDS_14 GDS_15 GDS_17 GDS_21 GDS_22 GDS_23), miss
+
+gen gds15_combined = .
+replace gds15_combined = gds15 if source_study==0
+replace gds15_combined = gds15_snack if source_study==1
+egen gds15_combinedSD = std(gds15_combined) 
+
 save "I:\SNAD Data\Cleaned\SNAD-SNACK Merged Data\Long-merged-.dta" ///add date for reference"
 
 
 **********************************************************************
 **# 3 Create and save "Simple" file: Remove items and reorder variables
 **********************************************************************
+
 drop GDS_1 GDS_2 GDS_3 GDS_4 GDS_5 GDS_6 GDS_7 GDS_8 GDS_9 GDS_10 GDS_11 GDS_12 GDS_13 GDS_14 GDS_15 GDS_16 GDS_17 GDS_18 GDS_19 GDS_20 GDS_21 GDS_22 GDS_23 GDS_24 GDS_25 GDS_26 GDS_27 GDS_28 GDS_29 GDS_30 GAD_1 GAD_2 GAD_3 GAD_4 GAD_5 GAD_6 GAD_7 PHQ_1 PHQ_2 PHQ_3 PHQ_4 PHQ_5 PHQ_6 PHQ_7 PHQ_8  MLQ_1 MLQ_2 MLQ_3 MLQ_4 MLQ_5 MLQ_6 MLQ_7 MLQ_8 MLQ_9 MLQ_10 PANAS_1 PANAS_2 PANAS_3 PANAS_4 PANAS_5 PANAS_6 PANAS_7 PANAS_8 PANAS_9 PANAS_10 PANAS_11 PANAS_12 PANAS_13 PANAS_14 PANAS_15 PANAS_16 PANAS_17 PANAS_18 PANAS_19 PANAS_20 SWLS_1 SWLS_2 SWLS_3 SWLS_4 SWLS_5 FName_RT_recog_correct FN_recog_miss FName_RT_recog_miss FName_NewFoil_correct FName_NewFoil_RT FName_OldFoil FName_OldFoil_RT YA_M YA_M_RT OA_M OA_M_RT YA_F YA_F_RT OA_F OA_F_RT 
 
 label variable FAQ_TOT "functional activites questionnaire total"
