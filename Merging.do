@@ -53,6 +53,12 @@ destring age_snackw1, replace
 egen age = rowtotal(agesnad age_snackw1)
 order age, before(source_study)
 
+gen cog_stat = diagnosis_iadc
+recode cog_stat (.=0) if source_study == 1
+recode cog_stat (3=2) (.=-99)
+label define cog_stat 0 "SNACK" 1 "SNAD - Normal" 2 "SNAD - MCI/AD" -99 "Missing"
+label values cog_stat cog_stat
+order cog_stat, before(record_id)
 
 recode GDS_1 GDS_2 GDS_3 GDS_4 GDS_7 GDS_8 GDS_9 GDS_10 GDS_12 GDS_14 GDS_15 GDS_17 GDS_21 GDS_22 GDS_23 (2=0) // these are the GDS-15 items
 
