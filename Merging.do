@@ -73,6 +73,12 @@ replace gds15_combined = gds15 if source_study==0
 replace gds15_combined = gds15_snack if source_study==1
 egen gds15_combinedSD = std(gds15_combined) 
 
+order verfl_* , before(UDSVERFC)
+order VERFL_*, before(UDSVERFC)
+generate UDSVER_TOT = UDSVERFC + UDSVERLC
+order UDSVER_TOT, before(UDSVERFC)
+label variable UDSVER_TOT "UDS Verbal Fluency TOTAL"
+
 save "I:\SNAD Data\Cleaned\SNAD-SNACK Merged Data\Long-merged-.dta" ///add date for reference"
 
 
@@ -99,15 +105,10 @@ drop biologicalkids stepchildren volunteer_inc1 volunteer_inc2 volunteer_dec1 vo
 
 drop agesnad age_snackw1 date_snack_session1 date_snack_session2 redcap_event_name redcap_repeat_instrument redcap_repeat_instance rey date_avlt rey_avlt_complete date trails cube clock clock_numbers hands naming registration digits letter_a serial_7_s repetition fluency abstraction no_cue category multiple_cue date_orient month year place city2 where_administered moca_complete mailing_packet_1 trails_complete delayed_rey_avlt_complete rey_avlt_correct rey_avlt_confabs rey_avly_intrusions reycorrect reyconfabs reycorrect2 reyconfabs2 reycorrect3 reyconfabs3 reycorrect4 reyconfabs4 reycorrect5 reyconfabs5 reybcorrect reybconfabs reyintrusions reycorrecta reyconfabsa reyintrusionsa vigorhr vigormn vigortothr vigortotmn modhr modmn modtothr modtotmn walkhr walkmn walktothr walktotmin sithr sitmn sitwedhr sitwedmn physical_activity_an_v_4 Trailatime RawTrailA Trailbtime RawTrailB 
 
-order verfl_* , before(UDSVERFC)
-order VERFL_*, before(UDSVERFC)
 drop day_orient digif_longest digib_longest CRAFTD_Cue UDSBENTD_recog 
 rename MIN_semanticcue MINT_semanticcue
 label variable MINT_semanticcue "MINT_semanticcue"
 drop MINT_uncued MINT_semanticcue
-generate UDSVER_TOT = UDSVERFC + UDSVERLC
-order UDSVER_TOT, before(UDSVERFC)
-label variable UDSVER_TOT "UDS Verbal Fluency TOTAL"
 drop verfl_f_rep verfl_f_nonf verfl_l_rep verfl_l_nonf VERFL_totalsum VERFL_totalrep VERFL_totalnon 
 
 order vigor_* , before(moderate)
