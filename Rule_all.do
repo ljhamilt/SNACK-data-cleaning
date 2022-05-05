@@ -1,6 +1,6 @@
 ****Project: SNACK
 ****Author:  Lucas Hamilton
-****Date:    2022/04/22
+****Date:    2022/05/05
 ****Version: 17
 ****Purpose: do file that runs all do files for SNACK participants
 
@@ -26,7 +26,14 @@ do "Harmonize" //import data from excel, recode variables, merge with social net
 do "Merging" //merge and create full dataset for SNACK-SNAD
 
 
+**********************************************************************
+**# 4 Long-Form: Create long-formatted merged dataset
+**********************************************************************
+
+do "Long-form" //merge alter-level data for SNACK-SNAD and add behavioral data
+
 /*Summary of workflow:
 1. run NC clean: Import and clean social network data
 2. run Harmonize: Merge and harmonize all psycho/social/behavioral data within SNACK
 3. run Merging: Merge and harmonize across study arms
+4. run Long-form: Merge alter-level SNAD data with alter-level SNACK data and add beahvioral data from short-form merge
