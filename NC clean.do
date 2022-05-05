@@ -1,7 +1,7 @@
-****Priject: SNACK
-****Author:  Lucas Hamilton
+****Project: SNACK
+****Author:  Lucas Hamilton (Credit to Siyun Peng [https://github.com/PengSiyun] for source code)
 ****Date:    2022/04/21
-****Purpose: Run all do files for SNACK participant
+****Purpose: Clean SNACK participant social network data
 
 clear
 
