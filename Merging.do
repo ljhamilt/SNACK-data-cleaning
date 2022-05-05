@@ -31,10 +31,11 @@ tabulate wave time
 
 gen snack_session1_date
 gen snack_session2_date
-***will need to manually copy and paste dates from Experimenter sheet before proceeding
+/// manually copy and paste dates from Experimenter sheet before proceeding ///
 
-. generate statadate = exceldate + td(30dec1899)
-. format statadate %td
+***Alternative code to be implemented in future iterations***
+***generate statadate = exceldate + td(30dec1899)
+***format statadate %td
 
 ***recoding dates to match SNAD format
 gen str50 v1 = subinstr(snack_session1_date, "Friday, ","",.)
