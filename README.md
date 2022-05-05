@@ -9,5 +9,6 @@ Short summary of workflow:
 1. run NC clean: Import and clean social network data
 2. run Harmonize: Merge and harmonize all psycho/social/behavioral data within SNACK
 3. run Merging: Merge and harmonize across study arms
+4. run Long-form: Merge alter-level SNAD data with alter-level SNACK data and add beahvioral data from short-form merge
 
 Please consult the WIKI and individual do files for additional details.
