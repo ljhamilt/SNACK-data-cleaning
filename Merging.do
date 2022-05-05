@@ -48,7 +48,7 @@ gen str50 v7 = subinstr(v6, "Sunday, ","",.)
 gen numv7 = date(v7, "MDY")
 format numv7 %td
 rename numv7 snack_w1_date
-drop v1-v6
+drop v1-v7
 
 order SNACK_ID source_study wave snack_*_date, before(date_red)
 
