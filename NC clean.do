@@ -375,6 +375,7 @@ drop npossties_rd npossties_full
 ***************************************************************
 
 cd "I:\SNACK Interviews\cleaned"
+replace SNACK_ID =strtrim(SNACK_ID) //// remove leading and trailing blanks from SNACK_ID
 save "NC-LONG-clean-.dta", replace /// add date to confirm when cleaning occurred and avoid saving over previous files
 
 duplicates drop SUBID NC, force
