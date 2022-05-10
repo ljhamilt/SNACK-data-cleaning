@@ -152,10 +152,12 @@ estat esize
 anova alterage Ambi_tie##source_study
 margins Ambi_tie#source_study
 
+melogit Ambi_tie i.generator alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem relpartner relchild relfriend netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || source_study:  || SUBID:, covariance(unstructured) or
 
 melogit Ambi_tie alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem relpartner relchild relfriend netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || source_study:  || SUBID:, covariance(unstructured) or
 
 melogit Ambi_tie alterage alterfreqcon alterprox sup_listen alterfem relpartner relchild mage mfreq pfem || source_study:  || SUBID:, covariance(unstructured) or
+
 
 
 melogit Ambi_tie alterage alterfreqcon alterprox sup_listen relpartner relchild mfreq pfem || SUBID:  || source_study: , covariance(unstructured) or
