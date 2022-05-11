@@ -139,6 +139,17 @@ fre generator
 tab Ambi_tie generator
 fre  hlthburdn hlthcount hlthencrg impburdn impforce impmat et_wkndties et_wkdyties et_family et_cowrkrs et_neighbrs et_anyelse if generator ==0 & Ambi_tie ==1
 
+gen discuss = .
+gen regulators = .
+gen burdens = .
+replace discuss = 1 if impmat==1 | hlthcount==1
+replace regulators = 1 if impforce==1 | hlthencrg==1
+replace burdens = 1 if impburdn==1 | hlthburdn==1
+recode discuss (.=0)
+recode regulators (.=0)
+recode burdens (.=0)
+fre discuss regulators burdens
+
 
 
 
