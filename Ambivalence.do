@@ -155,6 +155,8 @@ melogit Ambi_tie i.discuss#i.regulators#i.burdens ib3.rel_groupedtype alterage a
 melogit Ambi_tie i.discuss##i.regulators##i.burdens ib3.rel_groupedtype alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || cog_stat:  || SUBID:, covariance(unstructured) or
 melogit Ambi_tie i.discuss i.regulators i.burdens i.discuss#i.regulators#i.burdens ib3.rel_groupedtype alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || cog_stat:  || SUBID:, covariance(unstructured) or
 
+mixed Ambi_mult i.discuss i.regulators i.burdens i.discuss#i.regulators#i.burdens ib3.rel_groupedtype alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || cog_stat:  || SUBID:, covariance(unstructured)
+
 foreach x in loan chores advice care listen alterfreqcon alterfem {
 tabulate Ambi_tie `x',chi2
 }
