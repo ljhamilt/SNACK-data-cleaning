@@ -15,17 +15,18 @@ duplicates drop SUBID, force
 tab Have_ambi num_randamb
 tab num_randamb Have_ambi
 
-
-
-
 drop if random==0
+rename nodeid from
 save "I:\random only.dta"
 
-rename nodeid from
+multimport delimited, dir("I:\SNACK Interviews\Netcanvas\alter_tie") clear force import(stringcols(_all))
 
 destring from alteralterclose, replace
-merge m:m networkcanvasegouuid from using "I:\alter-alter.dta"
+recode alteralterclose (1=3) (2=2) (3=1) 
+save "I:\alter-alter.dta"
 
+use "I:\random only.dta"
+merge m:m networkcanvasegouuid from using "I:\alter-alter.dta"
 
 gen alteralterknow = alteralterclose
 recode alteralterknow (1/3=1) (.=0)
@@ -56,7 +57,9 @@ rename SUBID_1 SUBID
 rename from nodeid
 drop alterplacement_x alterplacement_y networkcanvascaseid networkcanvassessionid networkcanvasprotocolname sessionstart sessionfinish sessionexported subname interviewername 
 drop alterim1 alterim2 alterim3 alterhm1 alterhm3 alterhm2 alteret3 alteret4 alteret5 alteret6 alteret7 relpartner relparent relsibling relchild relgrandp relgrandc relauntunc relinlaw relothrel relcowork relneigh relfriend relboss relemploy relschool rellawyer reldoctor relothmed relmental relrelig relchurch relclub relleisure altersex alterrace altercollege alterage altercloseego alterfreqcon alterprox alterhknow alterdtr alterquestion altersupfunc_1 altersupfunc_2 altersupfunc_3 altersupfunc_4 altersupfunc_5 alterhassle altercls110 alter_name prevalter broughtforward altermissing stilldiscuss prevalterimcat_ima prevalterimcat_imb prevalterimcat_imc prevalterimcat_ihma prevalterimcat_ihmb prevalterimcat_ihmc prevalterimcat_etc prevalterimcat_etd prevalterimcat_ete prevalterimcat_etf previnterpreter altermissingother random _filename Ambi_mult Ambi_tie randomambi num_randamb number_ambi Have_ambi edgeid to
+save "I:\mergeback.dta"
 
+use "I:\ambi.dta"
 destring nodeid, replace
 merge m:m SNACK_ID networkcanvasegouuid nodeid using "I:\mergeback.dta", gen(outcome)
 list SNACK_ID nodeid if outcome==2
