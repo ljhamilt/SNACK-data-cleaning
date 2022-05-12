@@ -5,6 +5,65 @@
 ****Purpose: Generate ambivalent tie metrics for alter-level data
 
 
+gen randomambi = Ambi_tie*random
+bysort SUBID: egen num_randamb=sum(randomambi)
+gen Have_ambi if number_ambi > 0 = 1
+recode Have_ambi (.=0)
+save "I:\random-ambi.dta", replace
+
+duplicates drop SUBID, force
+tab Have_ambi num_randamb
+tab num_randamb Have_ambi
+
+
+
+
+drop if random==0
+save "I:\random only.dta"
+
+rename nodeid from
+
+destring from alteralterclose, replace
+merge m:m networkcanvasegouuid from using "I:\alter-alter.dta"
+
+
+gen alteralterknow = alteralterclose
+recode alteralterknow (1/3=1) (.=0)
+gen alteralter_1 = alteralterclose
+recode alteralter_1 (1=1) (else=.)
+gen alteralter_2 = alteralterclose
+recode alteralter_2 (2=1) (else=.)
+gen alteralter_3 = alteralterclose
+recode alteralter_3 (3=1) (else=.)
+tab alteralterknow Ambi_tie
+bysort SUBID from: egen avgalteralterclose = mean(alteralterclose)
+ttest avgalteralterclose, by(Have_ambi)
+ttest avgalteralterclose, by(Ambi_tie)
+
+bysort SUBID from: egen central_3 = count(alteralter_3)
+bysort SUBID from: egen central_2 = count(alteralter_2)
+bysort SUBID from: egen central_1 = count(alteralter_1)
+
+gen central_degree = central_3 + central_2 + central_1
+gen central_hideg = central_3
+gen central_lowdeg = central_degree - central_hideg
+
+duplicates drop SUBID from, force
+clonevar SNACK_ID = SUBID
+encode SUBID, generate(SUBID_1)
+drop SUBID
+rename SUBID_1 SUBID
+rename from nodeid
+drop alterplacement_x alterplacement_y networkcanvascaseid networkcanvassessionid networkcanvasprotocolname sessionstart sessionfinish sessionexported subname interviewername 
+drop alterim1 alterim2 alterim3 alterhm1 alterhm3 alterhm2 alteret3 alteret4 alteret5 alteret6 alteret7 relpartner relparent relsibling relchild relgrandp relgrandc relauntunc relinlaw relothrel relcowork relneigh relfriend relboss relemploy relschool rellawyer reldoctor relothmed relmental relrelig relchurch relclub relleisure altersex alterrace altercollege alterage altercloseego alterfreqcon alterprox alterhknow alterdtr alterquestion altersupfunc_1 altersupfunc_2 altersupfunc_3 altersupfunc_4 altersupfunc_5 alterhassle altercls110 alter_name prevalter broughtforward altermissing stilldiscuss prevalterimcat_ima prevalterimcat_imb prevalterimcat_imc prevalterimcat_ihma prevalterimcat_ihmb prevalterimcat_ihmc prevalterimcat_etc prevalterimcat_etd prevalterimcat_ete prevalterimcat_etf previnterpreter altermissingother random _filename Ambi_mult Ambi_tie randomambi num_randamb number_ambi Have_ambi edgeid to
+
+destring nodeid, replace
+merge m:m SNACK_ID networkcanvasegouuid nodeid using "I:\mergeback.dta", gen(outcome)
+list SNACK_ID nodeid if outcome==2
+sort SNACK_ID nodeid outcome
+
+
+
 gen Ambi_mult = altercloseego*alterhassle
 gen Ambi_tie = cond(Ambi_mult > 4, 1, 0)
 bysort SUBID wave: egen number_ambi=sum(Ambi_tie)
