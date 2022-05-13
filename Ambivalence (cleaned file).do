@@ -1,6 +1,6 @@
 ****Project: SNACK-SNAD
 ****Author:  Lucas Hamilton
-****Date:    2022/04/26
+****Date:    2022/05/13
 ****Version: 17
 ****Purpose: Generate ambivalent tie metrics for alter-level data
 
@@ -18,7 +18,7 @@ bysort SUBID wave: gen p_ambi = number_ambi / netsize
 gen v_hassle if alterhassle == 3 = 1
 gen ambi_vhassle = v_hassle*Ambi_tie
 recode ambi_vhassle (.=0)
-bysort SUBID : egen Num_vhassle = sum(ambi_vhassle)
+bysort SUBID: egen Num_vhassle = sum(ambi_vhassle)
 gen Have_vhassle if Num_vhassle > 0 = 1
 recode Have_vhassle (.=0)
 gen v_ambi = cond(Ambi_mult==9,1,0)
@@ -28,6 +28,16 @@ recode Have_V_ambi (.=0)
 gen Have_ambi if number_ambi > 0 = 1
 recode Have_ambi (.=0)
 
+gen rel_type7 = 0
+replace rel_type7 = 7 if relcowork == 1 | relneigh == 1 | relboss == 1 | relemploy == 1 | relschool == 1 | rellawyer == 1 | reldoctor == 1 | relothmed == 1 | relmental == 1 | relrelig == 1 | relchurch == 1 | relclub == 1 | relleisure == 1
+replace rel_type7 = 6 if relparent == 1 | relgrandp == 1 | relgrandc == 1 | relauntunc == 1 |  relothrel == 1
+replace rel_type7 = 5 if relfriend == 1
+replace rel_type7 = 4 if relinlaw == 1
+replace rel_type7 = 3 if relsibling == 1 
+replace rel_type7 = 2 if relchild == 1
+replace rel_type7 = 1 if relpartner == 1
+label define rel_type7 0 "missing" 1 "partner" 2 "child" 3 "sibling" 4 "in-law" 5 "friend" 6 "other relatives" 7 "other non-relatives"
+label values rel_type7 rel_type7
 
 gen rel_type = 0
 replace rel_type = 5 if relcowork == 1 | relneigh == 1 | relboss == 1 | relemploy == 1 | relschool == 1 | rellawyer == 1 | reldoctor == 1 | relothmed == 1 | relmental == 1 | relrelig == 1 | relchurch == 1 | relclub == 1 | relleisure == 1
@@ -50,6 +60,13 @@ replace burdens = 1 if impburdn==1 | hlthburdn==1
 recode discuss (.=0)
 recode regulators (.=0)
 recode burdens (.=0)
+label define discuss 0 "Non-discussant" 1 "Discussant"
+label values discuss discuss
+label define regulators 0 "Non-regulator" 1 "Regulator"
+label values regulators regulators
+label define burdens 0 "Non-burden" 1 "Burden"
+label values burdens burdens
+
 
 gen ambi_partnerraw=1 if ambi_groupedtype == 1
 gen ambi_childraw=1 if ambi_groupedtype == 2
@@ -161,68 +178,68 @@ merge m:m SNACK_ID networkcanvasegouuid nodeid using "I:\mergeback.dta", gen(out
 list SNACK_ID nodeid if outcome==2
 sort SNACK_ID nodeid outcome
 
-**recode to make sure it is consistent between SNACK and SNAD
+bysort SUBID: egen avg_alteralterdeg = mean(central_degree)
+gen hi_centrality = .
+replace hi_centrality = 0 if random==1 & avg_alteralterdeg != .
+replace hi_centrality = 1 if random==1 & central_degree > avg_alteralterdeg
+gen central_ambi = Ambi_tie*hi_centrality
+bysort SUBID: egen Num_cambi = sum(central_ambi)
+gen have_cambi = Num_cambi
+recode have_cambi (1/max=1)
+
+**quick recode to make sure it is consistent between SNACK and SNAD
 drop tkin
 gen tkin=relpartner+relparent+relsibling+relchild+relgrandp+relgrandc+relauntunc+relinlaw+relothrel
 
-**# 3 - Analysis
+**# 3 - Descriptive and frequency statistics
 
 
 bysort Ambi_tie: tabulate rel_type cog_stat, chi2
-tabulate Ambi_tie cog_stat
+bysort Ambi_tie: tabulate rel_type6 cog_stat, chi2
+bysort Ambi_tie: tabulate rel_type7 cog_stat, chi2
+tabulate Ambi_tie cog_stat, chi2
 
-
-melogit Ambi_tie i.discuss#i.regulators#i.burdens ib3.rel_groupedtype alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || cog_stat:  || SUBID:, covariance(unstructured) or
-melogit Ambi_tie i.discuss##i.regulators##i.burdens ib3.rel_groupedtype alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || cog_stat:  || SUBID:, covariance(unstructured) or
-melogit Ambi_tie i.discuss i.regulators i.burdens i.discuss#i.regulators#i.burdens ib3.rel_groupedtype alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || cog_stat:  || SUBID:, covariance(unstructured) or
-
-mixed Ambi_mult i.discuss i.regulators i.burdens i.discuss#i.regulators#i.burdens ib3.rel_groupedtype alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || cog_stat:  || SUBID:, covariance(unstructured)
-
-foreach x in loan chores advice care listen alterfreqcon alterfem {
-tabulate Ambi_tie `x',chi2
+foreach x in sup_loan sup_chores sup_advice sup_care sup_listen alterfreqcon alterfem {
+bysort cog_stat: tabulate Ambi_tie `x',chi2
 }
-bysort Ambi_tie: summarize altercls110 alterage
-anova altercls110 Ambi_tie##source_study
-margins Ambi_tie#source_study
+bysort cog_stat Ambi_tie: summarize alterstrength alterage
+anova alterstrength Ambi_tie##cog_stat
+margins Ambi_tie#cog_stat
 estat esize
-anova alterage Ambi_tie##source_study
-margins Ambi_tie#source_study
+anova alterage Ambi_tie##cog_stat
+margins Ambi_tie#cog_stat
 
-melogit Ambi_tie i.generator alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem relpartner relchild relfriend netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || source_study:  || SUBID:, covariance(unstructured) or
+**# 4 - Predicting ambivalence
 
-melogit Ambi_tie alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem relpartner relchild relfriend netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || source_study:  || SUBID:, covariance(unstructured) or
-
-melogit Ambi_tie alterage alterfreqcon alterprox sup_listen alterfem relpartner relchild mage mfreq pfem || source_study:  || SUBID:, covariance(unstructured) or
-
-
-
-melogit Ambi_tie alterage alterfreqcon alterprox sup_listen relpartner relchild mfreq pfem || SUBID:  || source_study: , covariance(unstructured) or
-
-
-melogit Ambi_tie alterage alterfreqcon alterstrength ib2.alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem relpartner relchild relfriend netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || SUBID:  || source_study: , covariance(unstructured) or
-
-melogit Ambi_tie alterage alterfreqcon alterprox sup_listen alterfem relpartner relchild mfreq pfem diverse || SUBID:  || source_study: , covariance(unstructured) or
+melogit Ambi_tie i.discuss i.regulators i.burdens i.discuss#i.regulators#i.burdens i.rel_type7 alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || cog_stat:  || SUBID:, covariance(unstructured) or
+estat icc
+estat ic
+testparm i.discuss#i.regulators#i.burdens, equal
+pwcompare i.discuss#i.regulators#i.burdens, effect mcompare(bonferroni)
+testparm i.rel_type7, equal
+pwcompare rel_type7, effects mcompare(bonferroni)
 
 
+marginsplot, recast(bar) ti("Predicted Probabilities by Relationship Type") ytitle("Marginal predictions") ylabel() xtitle("") xlabel(,angle(45)) plotop(barw(.8) fintensity(inten30)) ciop(msize(vlarge) lw(medthick)) name(fig1d, replace)
+margins discuss#regulator#burdens
+marginsplot, xdim(discuss regulators) by(burdens) recast(bar) ti("") ytitle("Marginal predictions") ylabel() xtitle("") xlabel(none) plotop(barw(.8) fintensity(inten30)) ciop(msize(vlarge) lw(medthick)) name(fig1g, replace)
+
+****overly-simplified model by removing n.s. predictors in previous estimation
+melogit Ambi_tie i.discuss i.regulators i.burdens i.discuss#i.regulators#i.burdens i.rel_type7 alterfreqcon mage mfreq pfem || cog_stat: || SUBID:, covariance(unstructured) or
+estat icc
+estat ic
+***shows worse ICC and IC estimates
+
+
+****modelling ambivalence as the interaction between closeness and hassling
+mixed Ambi_mult i.discuss i.regulators i.burdens i.discuss#i.regulators#i.burdens i.rel_type7 alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || cog_stat:  || SUBID:, covariance(unstructured)
+
+****including the pseudo-centrality metric about have a hi-degree ambivalent tie
+bysort source_study: melogit Ambi_tie i.discuss i.regulators i.burdens i.discuss#i.regulators#i.burdens i.rel_type7 alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging have_cambi || SUBID:, covariance(unstructured) or
 
 
 
-melogit v_ambi  alterage alterfreqcon altercls110 alterprox alterrace alterfem relpartner relchild relfriend || SUBID: || source_study: , covariance(unstructured)
-
-melogit Ambi_tie alterage alterfreqcon altercls110 alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem relpartner relchild relfriend || SUBID: || source_study: , covariance(unstructured) or
-
-melogit Ambi_tie alterage alterfreqcon altercls110 alterprox loan chores advice listen care alterrace alterfem relpartner relchild relfriend || SUBID: , covariance(unstructured) vce(cluster source_study) or
-
-melogit Ambi_tie alterage alterfreqcon alterstrength alterprox#alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem relpartner relchild relfriend || SUBID: netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging || cog_stat: , covariance(unstructured) or
-
-
-logistic v_ambi source_study alterage alterfreqcon altercls110 alterprox alterrace alterfem relpartner relchild relfriend, vce(cluster SUBID)
-estat gof
-
-logistic Ambi_tie source_study alterage alterfreqcon altercls110 alterprox alterrace alterfem relpartner relchild relfriend, vce(cluster SUBID)
-estat gof
-
-|||||||||||\\\\\\\\\\\|||||||||||
+**# 5 - Transition to SUBID-level for additional analyses
 
 duplicates drop SUBID wave, force
 
