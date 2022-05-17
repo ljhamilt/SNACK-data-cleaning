@@ -67,6 +67,8 @@ label values regulators regulators
 label define burdens 0 "Non-burden" 1 "Burden"
 label values burdens burdens
 
+table (discuss regulators) burdens, statistic(frequency) statistic(percent)
+
 
 gen ambi_partnerraw=1 if ambi_groupedtype == 1
 gen ambi_childraw=1 if ambi_groupedtype == 2
