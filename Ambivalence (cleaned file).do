@@ -118,6 +118,8 @@ clear
 
 **# 2 - Compute a pseudo-centrality indicator for 10 randomly chosen alters 
 
+////for SNAD - skip steps 1 and 2//////
+
 **step 1 - reload original alter-level data to preserve merged dataset
 
 multimport delimited, dir("I:\SNACK Interviews\Netcanvas\alter") clear force import(stringcols(_all))
@@ -142,8 +144,8 @@ save "I:\alter-alter.dta"
 use "I:\random-only.dta"
 merge m:m networkcanvasegouuid from using "I:\alter-alter.dta"
 
-gen alteralterknow = alteralterclose
-recode alteralterknow (1/3=1) (.=0)
+gen alteralterknow = alteralterclose //// change all alteralterclose to tievalue for SNAD-ENSO
+recode alteralterknow (1/3=1) (.=0) 
 gen alteralter_1 = alteralterclose
 recode alteralter_1 (1=1) (else=.)
 gen alteralter_2 = alteralterclose
@@ -151,7 +153,7 @@ recode alteralter_2 (2=1) (else=.)
 gen alteralter_3 = alteralterclose
 recode alteralter_3 (3=1) (else=.)
 tab alteralterknow Ambi_tie
-bysort SUBID from: egen avgalteralterclose = mean(alteralterclose)
+bysort SUBID from: egen avgalteralterclose = mean(alteralterclose) ///// change SUBID from = networkcanvassourceuuid for SNAD-NC / alter_a_id for SNAD-ENSO
 bysort SUBID from: egen central_3 = count(alteralter_3)
 bysort SUBID from: egen central_2 = count(alteralter_2)
 bysort SUBID from: egen central_1 = count(alteralter_1)
@@ -175,6 +177,21 @@ save "I:\mergeback.dta"
 use "I:\ambivalent_ties.dta"
 destring nodeid, replace
 merge m:m SNACK_ID networkcanvasegouuid nodeid using "I:\mergeback.dta", gen(outcome)
+
+****ENSO ONLY 
+duplicates drop SUBID alter_a_id, force
+drop tievalue tievalue_min tievalue_max issue survey_id survey_version interview_id respondent_id respondent_name 
+drop alter_b_id alter_b_name created_on modified_on _filename dup pickone 
+rename alter_a_name alter_name
+rename alter_a_id TIEID
+merge m:m SUBID TIEID using "I:\ENSO-mergeback1.dta", gen(outcome2)
+
+*****NC SNAD ONLY
+duplicates drop networkcanvasegouuid from, force
+rename from nodeid
+/////\\\\\//\\\///\\/\/\/ must use Excel to create SUBID from filename via copy/paste
+merge m:m SUBID alterid using "I:\NC-mergeback2.dta", gen(outcome3)
+
 
 ***check for mismatched cases
 list SNACK_ID nodeid if outcome==2
