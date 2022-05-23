@@ -118,7 +118,26 @@ clear
 
 **# 2 - Compute a pseudo-centrality indicator for 10 randomly chosen alters 
 
-////for SNAD - skip steps 1 and 2//////
+////for SNAD/////
+use "I:\SNAD ENSO.dta", clear
+merge m:m SUBID TIEID using "I:\SNAD Data\ENSO-participant-altertie-long.dta", gen(outcome)
+drop if outcome==2
+gen alteralter_1 = tievalue
+recode alteralter_1 (1=1) (else=.)
+gen alteralter_2 = tievalue
+recode alteralter_2 (2=1) (else=.)
+gen alteralter_3 = tievalue
+recode alteralter_3 (3=1) (else=.)
+bysort SUBID TIEID: egen avgalteralterclose = mean(tievalue)
+bysort SUBID TIEID: egen central_3 = count(alteralter_3)
+bysort SUBID TIEID: egen central_2 = count(alteralter_2)
+bysort SUBID TIEID: egen central_1 = count(alteralter_1)
+gen central_degree = central_3 + central_2 + central_1
+gen central_hideg = central_3
+gen central_lowdeg = central_degree - central_hideg
+drop if tievalue == .
+keep SUBID source source_study wave TIEID alter_a_name avgalteralterclose central_3 central_2 central_1 central_degree central_hideg central_lowdeg
+
 
 **step 1 - reload original alter-level data to preserve merged dataset
 
