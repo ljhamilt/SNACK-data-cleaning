@@ -281,6 +281,10 @@ mixed Ambi_mult i.discuss i.regulators i.burdens i.discuss#i.regulators#i.burden
 bysort source_study: melogit Ambi_tie i.discuss i.regulators i.burdens i.discuss#i.regulators#i.burdens i.rel_type7 alterage alterfreqcon alterstrength alterprox sup_loan sup_chores sup_advice sup_listen sup_care alterrace alterfem netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging have_cambi || SUBID:, covariance(unstructured) or
 
 
+regress std_avgdegree have_cambi density netsize weakest diverse pkin bridging source_study
+regress  have_cambi std_avgdegree density netsize weakest diverse pkin bridging source_study
+logit have_cambi std_avgdegree density netsize weakest diverse pkin bridging source_study
+
 
 **# 5 - Transition to SUBID-level for additional analyses
 
