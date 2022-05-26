@@ -285,6 +285,9 @@ regress std_avgdegree have_cambi density netsize weakest diverse pkin bridging s
 regress  have_cambi std_avgdegree density netsize weakest diverse pkin bridging source_study
 logit have_cambi std_avgdegree density netsize weakest diverse pkin bridging source_study
 
+regress number_ambi avg_alteralterdeg have_cambi##Have_V_ambi density netsize weakest diverse pkin source_study
+vif
+margins have_cambi#Have_V_ambi
 
 **# 5 - Transition to SUBID-level for additional analyses
 
