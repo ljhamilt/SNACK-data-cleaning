@@ -291,6 +291,12 @@ margins have_cambi#Have_V_ambi
 
 **# 5 - Transition to SUBID-level for additional analyses
 
+foreach x in netsize msupport mstrength weakest diverse density bridging {
+mixed `x' ambi_partners ambi_children ambi_friends have_cambi p_ambi age female || source_study: 
+}
+
+bysort source_study: tab rel_type7 central_ambi, chi2  expected
+
 duplicates drop SUBID wave, force
 
 save "I:\SNAD Data\Cleaned data\SNAD-SNACK Merged Data\Ambivalent-shortformerge.dta"
