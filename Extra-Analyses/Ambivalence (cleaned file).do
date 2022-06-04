@@ -291,8 +291,13 @@ margins have_cambi#Have_V_ambi
 
 **# 5 - Transition to SUBID-level for additional analyses
 
-foreach x in netsize msupport mstrength weakest diverse density bridging {
-mixed `x' ambi_partners ambi_children ambi_friends have_cambi p_ambi age female || source_study: 
+recode ambi_partners ambi_children ambi_friends ambi_otherrelatives ambi_othernonrelatives (1/max=1)
+foreach x in ambi_partners ambi_children ambi_friends ambi_otherrelatives ambi_othernonrelatives {
+tab `x' source_study, chi2
+}
+
+foreach x in netsize msupport mstrength diverse density bridging {
+mixed `x' Have_ambi ambi_partners ambi_children ambi_friends ambi_otherrelatives ambi_othernonrelatives have_cambi p_ambi age female edu || source_study: 
 }
 
 bysort source_study: tab rel_type7 central_ambi, chi2  expected
