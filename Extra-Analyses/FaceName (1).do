@@ -24,6 +24,10 @@ drop if std_recog < -2
 
 anova FName_recog age_group##FN_vers
 anova std_recog age_group##FN_vers
+gen in_FN = e(sample)
+tab age_group in_FN
+bysort age_group: sum age
+bysort age_group: fre race marital school gender
 
 
 **# 1 ANALYSES FOR PAPER
