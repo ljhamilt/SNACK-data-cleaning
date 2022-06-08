@@ -51,16 +51,19 @@ GLM Foil_RT_new Foil_RT_old BY age_group
   /WSDESIGN=FoilType
   /DESIGN=age_group.
 
+  COMPUTE OA_recog=FNameT_OAF + FNameT_OAM.
+EXECUTE.
+COMPUTE YA_recog=FNameT_YAF + FNameT_YAM.
+EXECUTE.
 
-GLM FNameT_YAM FNameT_YAF FNameT_OAM FNameT_OAF BY age_group
-  /WSFACTOR=TargetAge 2 Polynomial TargetGender 2 Polynomial 
+GLM YA_recog OA_recog BY age_group
+  /WSFACTOR=TargetAge 2 Polynomial
   /METHOD=SSTYPE(3)
-  /EMMEANS=TABLES(age_group*TargetAge*TargetGender) COMPARE(age_group) ADJ(LSD)
-  /EMMEANS=TABLES(age_group*TargetAge*TargetGender) COMPARE(TargetAge) ADJ(LSD)
-  /EMMEANS=TABLES(age_group*TargetAge*TargetGender) COMPARE(TargetGender) ADJ(LSD)
+  /EMMEANS=TABLES(age_group*TargetAge) COMPARE(age_group) ADJ(LSD)
   /PRINT=ETASQ 
   /CRITERIA=ALPHA(.05)
-  /WSDESIGN=TargetAge TargetGender TargetAge*TargetGender
+  /WSDESIGN=TargetAge
   /DESIGN=age_group.
+
 
 
