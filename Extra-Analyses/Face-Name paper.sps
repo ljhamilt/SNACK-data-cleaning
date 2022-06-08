@@ -1,5 +1,3 @@
-﻿* Encoding: UTF-8.
-
 DATASET ACTIVATE DataSet1.
 UNIANOVA FN_recall BY age_group FaceName_version
   /METHOD=SSTYPE(3)
