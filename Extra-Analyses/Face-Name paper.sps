@@ -100,3 +100,14 @@ REGRESSION
   /METHOD=ENTER Office_Control Office_deceit Office_emotion Office_faux Office_infer Office_motiv 
     Office_Seen RTME.
 
+  PROCESS 
+  y=std_recall
+  /x=age_group
+  /m=delayed_rey_sum Office_emotion        
+  /cov=gender school ladder                    
+  /decimals=F10.4                                
+  /boot=5000    
+  
+  /conf=95
+  /longname=1
+  /model=4.
