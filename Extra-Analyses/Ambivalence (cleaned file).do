@@ -290,6 +290,9 @@ vif
 margins have_cambi#Have_V_ambi
 
 **# 5 - Transition to SUBID-level for additional analyses
+duplicates drop SUBID wave, force
+
+save "I:\SNAD Data\Cleaned data\SNAD-SNACK Merged Data\Ambivalent-shortformerge.dta"
 
 recode ambi_partners ambi_children ambi_friends ambi_otherrelatives ambi_othernonrelatives (1/max=1)
 foreach x in ambi_partners ambi_children ambi_friends ambi_otherrelatives ambi_othernonrelatives {
@@ -307,36 +310,3 @@ melogit have_cambi age female edu netsize mage pwhite mprox  pclose mclose pfreq
 
 bysort source_study: tab rel_type7 central_ambi, chi2  expected
 
-duplicates drop SUBID wave, force
-
-save "I:\SNAD Data\Cleaned data\SNAD-SNACK Merged Data\Ambivalent-shortformerge.dta"
-
-
-\\\\\\\\\\\\\
-
-merge 1:1 SUBID wave using "I:\SNAD Data\Cleaned data\SNAD-SNACK Merged Data\Ambivalent-shortformerge.dta"
-list SUBID if _merge==1
-save "I:\SNAD Data\Cleaned data\SNAD-SNACK Merged Data\Simple_ambi_04-26.dta"
-
-bysort wave: tabulate Have_ambi source_study, chi2
-ttest avgambistrength, by(source_study)
-tabulate Have_ambi source_study, chi2
-bysort wave: tabulate Have_ambi source_study, chi2
-anova netsize source_study##Have_ambi
-margins source_study#Have_ambi
-marginsplot
-anova netsize source_study##Have_V_ambi
-margins source_study#Have_ambi
-margins source_study#Have_V_ambi
-bysort wave: tabulate Have_V_ambi source_study, chi2
-ttest number_ambi, by(source_study)
-ttest number_ambi, by(source_study) if wave ==1
-ttest number_ambi if wave ==1, by(source_study)
-ttest p_ambi if wave ==1, by(source_study)
-ttest avgambistrength if wave ==1, by(source_study)
-esize twosample avgambicls, by(source_study)stripplot avgambicls, cumul cumprob box centre over(source_study) refline vertical xsize(3)
-esize twosample avgambicls, by(source_study)stripplot avgambicls, cumul cumprob box centre over(source_study) refline vertical xsize(3)
-esize twosample avgambicls, by(source_study)
-esize twosample avgambistrength, by(source_study)
-stripplot avgambicls, cumul cumprob box centre over(source_study) refline vertical xsize(3)
-stripplot avgambistrength, cumul cumprob box centre over(source_study) refline vertical xsize(3)
