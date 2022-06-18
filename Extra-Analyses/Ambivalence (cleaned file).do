@@ -296,8 +296,8 @@ foreach x in ambi_partners ambi_children ambi_friends ambi_otherrelatives ambi_o
 tab `x' source_study, chi2
 }
 
-foreach x in netsize msupport mstrength diverse density bridging {
-mixed `x' Have_ambi ambi_partners ambi_children ambi_friends ambi_otherrelatives ambi_othernonrelatives have_cambi p_ambi age female edu || source_study: 
+foreach x in Have_ambi ambi_partners ambi_children ambi_friends ambi_otherrelatives ambi_othernonrelatives have_cambi p_ambi {
+mixed `x' age female edu netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging|| source_study: 
 }
 
 bysort source_study: tab rel_type7 central_ambi, chi2  expected
