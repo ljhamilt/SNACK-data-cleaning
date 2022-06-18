@@ -300,6 +300,11 @@ foreach x in Have_ambi ambi_partners ambi_children ambi_friends ambi_otherrelati
 mixed `x' age female edu netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging|| source_study: 
 }
 
+foreach x in Have_ambi ambi_partners ambi_children ambi_friends ambi_otherrelatives ambi_othernonrelatives have_cambi p_ambi {
+melogit `x' age female edu netsize mage pwhite mprox  pclose mclose pfreq mfreq sdfreq msupport msupport3 pcare ploan pchores plisten padvice mhassles phassles mstrength weakest iqrstrength sdstrength pfem diverse density avg_alteralterdeg bridging|| source_study:, or
+}
+melogit have_cambi age female edu netsize mage pwhite mprox  pclose mclose pfreq mfreq sdfreq msupport msupport3 pcare ploan pchores plisten padvice mhassles phassles mstrength weakest iqrstrength sdstrength pfem diverse density avg_alteralterdeg bridging|| source_study:, or
+
 bysort source_study: tab rel_type7 central_ambi, chi2  expected
 
 duplicates drop SUBID wave, force
