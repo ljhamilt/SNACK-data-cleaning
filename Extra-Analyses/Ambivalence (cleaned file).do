@@ -230,27 +230,14 @@ drop tkin
 gen tkin=relpartner+relparent+relsibling+relchild+relgrandp+relgrandc+relauntunc+relinlaw+relothrel
 
 **# 3 - Descriptive and frequency statistics
-tab rel_type7 source_study, chi2
-tab Ambi_tie source_study, chi2
-
-twoway (histogram rel_type7, discrete percent color(black%40)) (histogram rel_type7 if Ambi_tie==1, discrete percent color(ebblue%60) xtitle("") xlabel(1 "Partner" 2 "Child" 3 "Sibling" 4 "In-law" 5 "Friend" 6 "Other Kin" 7 "Other Non-kin", angle(45))), legend(order(1 "% of all alters" 2 "% of ambivalent alters") position(12)) name(exp_obs, replace)
-
-twoway (histogram generator_type, discrete percent color(black%40)) (histogram generator_type if Ambi_tie==1, discrete percent color(ebblue%60) xtitle("") xlabel(1 "Elastic Ties" 2 "Discussant (D)" 3 "Regulator (R)" 4 "D & R" 5 "Burden (B)" 6 "B & D" 7 "B & R" 8 "B, D, & R", angle(45))), legend(order(1 "% of all alters" 2 "% of ambivalent alters") position(12)) name(exp_obs_gen, replace)
-
-bysort Ambi_tie: tabulate rel_type cog_stat, chi2
-bysort Ambi_tie: tabulate rel_type6 cog_stat, chi2
-bysort Ambi_tie: tabulate rel_type7 cog_stat, chi2
-tabulate Ambi_tie cog_stat, chi2
-
-foreach x in sup_loan sup_chores sup_advice sup_care sup_listen alterfreqcon alterfem {
-bysort cog_stat: tabulate Ambi_tie `x',chi2
+foreach x in alterfem rel_type7 altercollege alterprox alterfreqcon generator sup_loan sup_chores sup_advice sup_care sup_listen {
+tab Ambi_tie `x', chi2 expected
 }
-bysort cog_stat Ambi_tie: summarize alterstrength alterage
-anova alterstrength Ambi_tie##cog_stat
-margins Ambi_tie#cog_stat
-estat esize
-anova alterage Ambi_tie##cog_stat
-margins Ambi_tie#cog_stat
+
+foreach x in alterage alterstrength avgalteralterclose central_degree central_hideg {
+ttest `x', by(Ambi_tie)
+esize twosample `x', by(Ambi_tie)
+}
 
 **# 4 - Predicting ambivalence
 
