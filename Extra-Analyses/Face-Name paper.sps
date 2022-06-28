@@ -111,3 +111,30 @@ REGRESSION
   /conf=95
   /longname=1
   /model=4.
+
+  
+  PROCESS 
+  y=std_recall
+  /x=age_group
+  /m=delayed_rey_sum Office_emotion        
+  /cov=gender school ladder                    
+  /decimals=F10.4                                
+  /boot=5000    
+  
+  /conf=95
+  /longname=1
+  /model=6.
+  
+  
+  PROCESS 
+  y=std_recall
+  /x=age_group
+  /m=Office_emotion delayed_rey_sum       
+  /cov=gender school ladder                    
+  /decimals=F10.4                                
+  /boot=5000    
+  
+  /conf=95
+  /longname=1
+  /model=6.
+
