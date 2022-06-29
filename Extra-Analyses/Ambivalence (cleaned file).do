@@ -301,3 +301,10 @@ melogit have_cambi age female edu netsize mage pwhite mprox  pclose mclose pfreq
 
 bysort source_study: tab rel_type7 central_ambi, chi2  expected
 
+
+recode lack_companionship1 (1=5)(2=4)(3=3)(4=2)(5=1)
+recode left_out1 (1=5)(2=4)(3=3)(4=2)(5=1)
+recode feel_isolated1 (1=5)(2=4)(3=3)(4=2)(5=1)
+egen perc_soc_sup = rowtotal (family_help1 help_support1 friends_help1 go_wrong1 problems_family1 joys_sorrows1 make_decisions1 problems_friends1 lack_companionship1 left_out1 feel_isolated1)
+egen frndsup=rowmean(friends_help1 go_wrong1 joys_sorrows1)
+egen famsup=rowmean(family_help1 help_support1 problems_family1 make_decisions1)
