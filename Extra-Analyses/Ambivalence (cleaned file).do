@@ -286,6 +286,10 @@ foreach x in ambi_partners ambi_children ambi_friends ambi_otherrelatives ambi_o
 tab `x' source_study, chi2
 }
 
+foreach x in netsize msupport mstrength diverse density bridging {
+reg `x' age female edu source_study Have_ambi ambi_partners ambi_children ambi_friends ambi_otherrelatives ambi_othernonrelatives p_ambi
+}
+
 foreach x in Have_ambi ambi_partners ambi_children ambi_friends ambi_otherrelatives ambi_othernonrelatives have_cambi p_ambi {
 mixed `x' age female edu netsize mage pwhite mprox mfreq msupport mstrength weakest pfem diverse pkin density bridging|| source_study: 
 }
