@@ -269,12 +269,16 @@ bysort source_study: melogit Ambi_tie i.discuss i.regulators i.burdens i.discuss
 
 
 regress std_avgdegree have_cambi density netsize weakest diverse pkin bridging source_study
-regress  have_cambi std_avgdegree density netsize weakest diverse pkin bridging source_study
 logit have_cambi std_avgdegree density netsize weakest diverse pkin bridging source_study
 
 regress number_ambi avg_alteralterdeg have_cambi##Have_V_ambi density netsize weakest diverse pkin source_study
 vif
 margins have_cambi#Have_V_ambi
+
+anova alterstrength source_study##Have_ambi##rel_type7
+margins rel_type7#Have_ambi, by(source_study)
+marginsplot, recast(bar) by(source_study) ylab(0 (2) 10)
+
 
 **# 5 - Transition to SUBID-level for additional analyses
 duplicates drop SUBID wave, force
