@@ -32,39 +32,29 @@ EXAMINE VARIABLES=FN_recall
   /MISSING LISTWISE
   /NOTOTAL.
 
-GLM Foil_new Foil_old BY age_group
-  /WSFACTOR=FoilType 2 Polynomial 
+GLM OLD_OA NEW_OA OLD_YA NEW_YA BY age_group
+  /WSFACTOR=TargAge 2 Polynomial Foil 2 Polynomial 
   /METHOD=SSTYPE(3)
-  /EMMEANS=TABLES(age_group*FoilType) COMPARE(age_group) ADJ(LSD)
+  /EMMEANS=TABLES(OVERALL) 
+  /EMMEANS=TABLES(age_group) 
+  /EMMEANS=TABLES(TargAge) 
+  /EMMEANS=TABLES(Foil) 
+  /EMMEANS=TABLES(age_group*TargAge) COMPARE(age_group) ADJ(LSD)
+  /EMMEANS=TABLES(age_group*TargAge) COMPARE(TargAge) ADJ(LSD)
+  /EMMEANS=TABLES(age_group*Foil) COMPARE(age_group) ADJ(LSD)
+  /EMMEANS=TABLES(age_group*Foil) COMPARE(Foil) ADJ(LSD)
+  /EMMEANS=TABLES(TargAge*Foil) COMPARE(TargAge) ADJ(LSD)
+  /EMMEANS=TABLES(TargAge*Foil) COMPARE(Foil) ADJ(LSD)
+  /EMMEANS=TABLES(age_group*TargAge*Foil) COMPARE(age_group) ADJ(LSD)
+  /EMMEANS=TABLES(age_group*TargAge*Foil) COMPARE(TargAge) ADJ(LSD)
+  /EMMEANS=TABLES(age_group*TargAge*Foil) COMPARE(Foil) ADJ(LSD)
   /PRINT=ETASQ 
   /CRITERIA=ALPHA(.05)
-  /WSDESIGN=FoilType
+  /WSDESIGN=TargAge Foil TargAge*Foil
   /DESIGN=age_group.
 
-
-GLM Foil_RT_new Foil_RT_old BY age_group
-  /WSFACTOR=FoilType 2 Polynomial 
-  /METHOD=SSTYPE(3)
-  /EMMEANS=TABLES(age_group*FoilType) COMPARE(age_group) ADJ(LSD)
-  /PRINT=ETASQ 
-  /CRITERIA=ALPHA(.05)
-  /WSDESIGN=FoilType
-  /DESIGN=age_group.
-
-  COMPUTE OA_recog=FNameT_OAF + FNameT_OAM.
-EXECUTE.
-COMPUTE YA_recog=FNameT_YAF + FNameT_YAM.
-EXECUTE.
-
-GLM YA_recog OA_recog BY age_group
-  /WSFACTOR=TargetAge 2 Polynomial
-  /METHOD=SSTYPE(3)
-  /EMMEANS=TABLES(age_group*TargetAge) COMPARE(age_group) ADJ(LSD)
-  /PRINT=ETASQ 
-  /CRITERIA=ALPHA(.05)
-  /WSDESIGN=TargetAge
-  /DESIGN=age_group.
-
+SORT CASES  BY age_group.
+SPLIT FILE SEPARATE BY age_group.
 
 
 REGRESSION
