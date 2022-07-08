@@ -69,28 +69,33 @@ GLM OLD_OA NEW_OA OLD_YA NEW_YA
   /WSDESIGN=TargAge Foil TargAge*Foil.
 
 
+SPLIT FILE OFF.
+
+REGRESSION
+  /MISSING LISTWISE
+  /STATISTICS COEFF OUTS R ANOVA
+  /CRITERIA=PIN(.05) POUT(.10)
+  /NOORIGIN 
+  /DEPENDENT trail_b_time
+  /METHOD=ENTER trail_a_time
+  /SAVE RESID ZRESID.
+
+COMPUTE TMT_ratio=trail_a_time / trail_b_time.
+EXECUTE.
   
 REGRESSION
   /MISSING LISTWISE
   /STATISTICS COEFF OUTS R ANOVA COLLIN TOL CHANGE ZPP
   /CRITERIA=PIN(.05) POUT(.10)
   /NOORIGIN 
-  /DEPENDENT std_recall
+  /DEPENDENT std_recall ****or FN_recall****
   /METHOD=ENTER gender school ladder age_group
-  /METHOD=ENTER trail_a_time trail_b_time delayed_rey_sum
+  /METHOD=ENTER TMT_ratio delayed_rey_sum
   /METHOD=ENTER Office_Control Office_deceit Office_emotion Office_faux Office_infer Office_motiv 
     Office_Seen RTME.
 
-REGRESSION
-  /MISSING LISTWISE
-  /STATISTICS COEFF OUTS R ANOVA COLLIN TOL CHANGE ZPP
-  /CRITERIA=PIN(.05) POUT(.10)
-  /NOORIGIN 
-  /DEPENDENT std_recog
-  /METHOD=ENTER gender school ladder age_group
-  /METHOD=ENTER trail_a_time trail_b_time delayed_rey_sum
-  /METHOD=ENTER Office_Control Office_deceit Office_emotion Office_faux Office_infer Office_motiv 
-    Office_Seen RTME.
+****NO RECOGNITION EFFECTS****
+
 
 REGRESSION
   /MISSING LISTWISE
