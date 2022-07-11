@@ -83,19 +83,37 @@ REGRESSION
 COMPUTE TMT_ratio=trail_a_time / trail_b_time.
 EXECUTE.
   
+
 REGRESSION
   /MISSING LISTWISE
-  /STATISTICS COEFF OUTS R ANOVA COLLIN TOL CHANGE ZPP
+  /STATISTICS COEFF OUTS R ANOVA CHANGE ZPP
   /CRITERIA=PIN(.05) POUT(.10)
   /NOORIGIN 
-  /DEPENDENT std_recall ****or FN_recall****
+  /DEPENDENT FN_recog_correct
   /METHOD=ENTER gender school ladder age_group
-  /METHOD=ENTER TMT_ratio delayed_rey_sum
+  /METHOD=ENTER RES_1 delayed_rey_sum
   /METHOD=ENTER Office_Control Office_deceit Office_emotion Office_faux Office_infer Office_motiv 
-    Office_Seen RTME.
+    Office_Seen.
 
-****NO RECOGNITION EFFECTS****
+REGRESSION
+  /MISSING LISTWISE
+  /STATISTICS COEFF OUTS R ANOVA CHANGE ZPP
+  /CRITERIA=PIN(.05) POUT(.10)
+  /NOORIGIN 
+  /DEPENDENT FN_recall
+  /METHOD=ENTER gender school ladder age_group
+  /METHOD=ENTER RES_1 delayed_rey_sum Office_Control Office_deceit Office_emotion Office_faux Office_infer Office_motiv 
+    Office_Seen.
 
+REGRESSION
+  /MISSING LISTWISE
+  /STATISTICS COEFF OUTS R ANOVA CHANGE ZPP
+  /CRITERIA=PIN(.05) POUT(.10)
+  /NOORIGIN 
+  /DEPENDENT FN_recall
+  /METHOD=ENTER gender school ladder age_group
+  /METHOD=ENTER delayed_rey_sum 
+  /METHOD=ENTER Office_emotion.
 
 REGRESSION
   /MISSING LISTWISE
