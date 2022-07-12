@@ -11,18 +11,18 @@ UNIANOVA FN_recog_correct BY age_group FaceName_version
   /CRITERIA=ALPHA(0.05)
   /DESIGN=age_group FaceName_version age_group*FaceName_version.
 
-BOOTSTRAP
-  /SAMPLING METHOD=SIMPLE
-  /VARIABLES TARGET=FN_recall FN_recog_correct FN_RT_recog_correct FN_recog_miss FN_RT_recog_miss 
-    INPUT=age_group 
-  /CRITERIA CILEVEL=95 CITYPE=PERCENTILE  NSAMPLES=1000
-  /MISSING USERMISSING=EXCLUDE.
-T-TEST GROUPS=age_group('YA' 'OA')
-  /MISSING=ANALYSIS
-  /VARIABLES=FN_recall FN_recog_correct FN_RT_recog_correct FN_recog_miss FN_RT_recog_miss
-  /ES DISPLAY(TRUE)
-  /CRITERIA=CI(.95).
-
+GLM YA_freerec OA_freerec BY age_group
+  /WSFACTOR=TargetAge 2 Polynomial 
+  /METHOD=SSTYPE(3)
+  /EMMEANS=TABLES(age_group) 
+  /EMMEANS=TABLES(TargetAge) 
+  /EMMEANS=TABLES(age_group*TargetAge) COMPARE(age_group) ADJ(LSD)
+  /EMMEANS=TABLES(age_group*TargetAge) COMPARE(TargetAge) ADJ(LSD)
+  /PRINT=ETASQ 
+  /CRITERIA=ALPHA(.05)
+  /WSDESIGN=TargetAge 
+  /DESIGN=age_group.
+  
 EXAMINE VARIABLES=FN_recall
   /PLOT BOXPLOT STEMLEAF
   /COMPARE GROUPS
