@@ -69,6 +69,15 @@ label values burdens burdens
 
 table (discuss regulators) burdens, statistic(frequency) statistic(percent)
 
+gen burden_ambi = burdens*altercloseego
+gen reg_ambi =regulators*altercloseego
+tab burden_ambi Ambi_tie, chi2
+tab reg_ambi Ambi_tie, chi2
+
+gen burden_hassle_ambi = burdens*alterhassle
+gen reg_hassle_ambi = regulators*alterhassle
+tab burden_hassle_ambi Ambi_tie, chi2
+tab reg_hassle_ambi Ambi_tie, chi2
 
 gen ambi_partnerraw=1 if ambi_groupedtype == 1
 gen ambi_childraw=1 if ambi_groupedtype == 2
