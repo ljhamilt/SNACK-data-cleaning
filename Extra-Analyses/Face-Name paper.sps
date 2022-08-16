@@ -33,6 +33,16 @@ CROSSTABS
   /CELLS=COUNT
   /COUNT ROUND CELL.
 
+  IF  (age_group = 1) OwnAgeBias_OA=NEW_YA - OLD_YA.
+EXECUTE.
+
+IF  (age_group = 0) OwnAgeBias_YA=NEW_OA - OLD_OA.
+EXECUTE.
+
+
+COMPUTE recog_perc=FN_recog_correct / 16.
+EXECUTE.
+  
 UNIANOVA FN_recall BY age_group FaceName_version
   /METHOD=SSTYPE(3)
   /INTERCEPT=INCLUDE
