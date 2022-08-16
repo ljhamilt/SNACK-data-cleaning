@@ -1,4 +1,38 @@
 DATASET ACTIVATE DataSet1.
+
+RELIABILITY
+  /VARIABLES=Office_deceit Office_infer Office_motiv
+  /SCALE('CogTOM') ALL
+  /MODEL=ALPHA
+  /STATISTICS=DESCRIPTIVE CORR.
+
+RELIABILITY
+  /VARIABLES=Office_faux Office_emotion RTME
+  /SCALE('AffTOM') ALL
+  /MODEL=ALPHA
+  /STATISTICS=DESCRIPTIVE CORR.
+
+RELIABILITY
+  /VARIABLES=Office_deceit Office_infer Office_motiv Office_emotion Office_faux
+  /SCALE('CogTOM') ALL
+  /MODEL=ALPHA
+  /STATISTICS=DESCRIPTIVE CORR.
+
+
+T-TEST GROUPS=age_group(0 1)
+  /MISSING=ANALYSIS
+  /VARIABLES=RTME Office_Control Office_deceit Office_emotion Office_faux Office_infer Office_motiv 
+    delayed_rey_sum ZRE_2
+  /ES DISPLAY(TRUE)
+  /CRITERIA=CI(.95).
+
+CROSSTABS
+  /TABLES=Office_Seen BY age_group
+  /FORMAT=AVALUE TABLES
+  /STATISTICS=CHISQ 
+  /CELLS=COUNT
+  /COUNT ROUND CELL.
+
 UNIANOVA FN_recall BY age_group FaceName_version
   /METHOD=SSTYPE(3)
   /INTERCEPT=INCLUDE
