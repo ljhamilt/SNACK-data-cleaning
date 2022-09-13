@@ -78,6 +78,15 @@ gen burden_hassle_ambi = burdens*alterhassle
 gen reg_hassle_ambi = regulators*alterhassle
 tab burden_hassle_ambi Ambi_tie, chi2
 tab reg_hassle_ambi Ambi_tie, chi2
+recode burden_ambi reg_ambi burden_hassle_ambi reg_hassle_ambi (0 1=0) (else = 1)
+foreach x in burden_ambi reg_ambi burden_hassle_ambi reg_hassle_ambi {
+gen match_`x' = .
+replace match_`x' = 1 if `x' == 1 & Ambi_tie == 1
+replace match_`x' = 2 if `x' == 0 & Ambi_tie == 1
+replace match_`x' = 3 if `x' == 1 & Ambi_tie == 0
+replace match_`x' = 4 if `x' == 0 & Ambi_tie == 0
+}
+
 
 gen ambi_partnerraw=1 if ambi_groupedtype == 1
 gen ambi_childraw=1 if ambi_groupedtype == 2
@@ -287,6 +296,8 @@ margins have_cambi#Have_V_ambi
 anova alterstrength source_study##Have_ambi##rel_type7
 margins rel_type7#Have_ambi, by(source_study)
 marginsplot, recast(bar) by(source_study) ylab(0 (2) 10)
+
+
 
 
 **# 5 - Transition to SUBID-level for additional analyses
