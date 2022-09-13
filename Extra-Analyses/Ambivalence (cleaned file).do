@@ -93,7 +93,11 @@ graph pie, over(match_burden_ambi) by(rel_type7, total) name(pie2)
 graph pie, over(match_reg_hassle_ambi) by(rel_type7, total) name(pie3)
 graph pie, over(match_burden_hassle_ambi) by(rel_type7, total) name(pie4)
 
-
+DO if Ambi_tie==0
+graph pie, over(match_reg_ambi) by(rel_type7, total) name(pieambi1)
+graph pie, over(match_burden_ambi) by(rel_type7, total) name(pieambi2)
+graph pie, over(match_reg_hassle_ambi) by(rel_type7, total) name(pieambi3)
+graph pie, over(match_burden_hassle_ambi) by(rel_type7, total) name(pieambi4)
 
 gen ambi_partnerraw=1 if ambi_groupedtype == 1
 gen ambi_childraw=1 if ambi_groupedtype == 2
