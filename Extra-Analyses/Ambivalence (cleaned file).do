@@ -86,6 +86,13 @@ replace match_`x' = 2 if `x' == 0 & Ambi_tie == 1
 replace match_`x' = 3 if `x' == 1 & Ambi_tie == 0
 replace match_`x' = 4 if `x' == 0 & Ambi_tie == 0
 }
+lab def match 1 "Hit" 2 "Miss" 3 "False Alarm" 4 "Correct Rejection"
+lab val match_* match
+graph pie, over(match_reg_ambi) by(rel_type7, total) name(pie1)
+graph pie, over(match_burden_ambi) by(rel_type7, total) name(pie2)
+graph pie, over(match_reg_hassle_ambi) by(rel_type7, total) name(pie3)
+graph pie, over(match_burden_hassle_ambi) by(rel_type7, total) name(pie4)
+
 
 
 gen ambi_partnerraw=1 if ambi_groupedtype == 1
